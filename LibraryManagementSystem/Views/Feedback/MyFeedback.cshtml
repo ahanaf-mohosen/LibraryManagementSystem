@@ -1,0 +1,107 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Feedback>
+
+@{
+    ViewData["Title"] = "My Feedback";
+}
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">
+        My Feedback
+    </h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You have not submitted any feedback yet.
+        </div>
+    }
+    else
+    {
+        @foreach (var feedback in Model)
+        {
+            <div class="card mb-3 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5>
+                        @feedback.Book?.Title
+                    </h5>
+
+                    <div class="mb-2">
+
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= feedback.Rating)
+                            {
+                                          <i class="bi bi-star-fill rating-star"
+                                              aria-hidden="true"></i>
+                            }
+                            else
+                            {
+                                          <i class="bi bi-star rating-star muted"
+                                              aria-hidden="true"></i>
+                            }
+                        }
+
+                        <span class="ms-2">
+                            (@feedback.Rating/5)
+                        </span>
+
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(feedback.Comment))
+                    {
+                        <p>
+                            @feedback.Comment
+                        </p>
+                    }
+
+                          <div class="d-flex gap-2 mb-2">
+
+                                <a asp-action="Edit"
+                                    asp-route-id="@feedback.FeedbackID"
+                                    class="btn btn-sm btn-outline-primary">
+                                     <i class="bi bi-pencil me-1"
+                                         aria-hidden="true"></i>
+                                     Edit Review
+                                </a>
+
+                                <form asp-action="DeleteMine"
+                                        method="post"
+                                        onsubmit="return confirm('Delete this review?');">
+
+                                     <input type="hidden"
+                                              name="id"
+                                              value="@feedback.FeedbackID" />
+
+                                     <button type="submit"
+                                                class="btn btn-sm btn-outline-danger">
+                                          <i class="bi bi-trash me-1"
+                                              aria-hidden="true"></i>
+                                          Delete
+                                     </button>
+
+                                </form>
+
+                          </div>
+
+                    <small class="text-muted">
+                        Submitted:
+                        @feedback.DateSubmitted.ToString("dd MMM yyyy HH:mm")
+                    </small>
+
+                </div>
+
+            </div>
+        }
+    }
+
+</div>

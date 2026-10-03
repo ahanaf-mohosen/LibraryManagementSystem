@@ -1,0 +1,554 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+@using Microsoft.EntityFrameworkCore
+@inject LibraryManagementSystem.Data.ApplicationDbContext DbContext
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+        <link rel="icon"
+            type="image/png"
+                href="~/images/logo/library-logo.png" />
+
+    <title>
+        @ViewData["Title"] - City Knowledge Library
+    </title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg navbar-dark site-nav shadow-sm">
+
+            <div class="container">
+
+                <a class="navbar-brand fw-bold"
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <img src="~/images/logo/library-logo.png"
+                         class="brand-logo"
+                        alt="City Knowledge Library logo" />
+                    <span>City Knowledge Library</span>
+
+                </a>
+
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+
+                <div class="collapse navbar-collapse"
+                     id="mainNavbar">
+
+                    <!-- LEFT NAVIGATION -->
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Home"
+                                   asp-action="Index">
+
+                                    Home
+
+                                </a>
+
+                            </li>
+
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Book"
+                                   asp-action="Index">
+
+                                    Books
+
+                                </a>
+
+                            </li>
+                        }
+
+
+                        <!-- MEMBER -->
+
+                        @if (User.Identity?.IsAuthenticated == true &&
+                             User.IsInRole("Member"))
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="BorrowTransaction"
+                                   asp-action="Index">
+
+                                    My Borrowings
+
+                                </a>
+
+                            </li>
+
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Reservation"
+                                   asp-action="Index">
+
+                                    My Reservations
+
+                                </a>
+
+                            </li>
+
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Fine"
+                                   asp-action="MyFines">
+
+                                    My Fines
+
+                                </a>
+
+                            </li>
+
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Feedback"
+                                   asp-action="MyFeedback">
+
+                                    My Feedback
+
+                                </a>
+
+                            </li>
+                        }
+
+
+                        <!-- LIBRARIAN -->
+
+                        @if (User.Identity?.IsAuthenticated == true &&
+                             User.IsInRole("Librarian"))
+                        {
+                            <li class="nav-item dropdown">
+
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown">
+
+                                    Management
+
+                                </a>
+
+                                <ul class="dropdown-menu">
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Library"
+                                           asp-action="Index">
+
+                                            Libraries
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Book"
+                                           asp-action="Index">
+
+                                            Book Catalogue
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="BorrowingConfig"
+                                           asp-action="Index">
+
+                                            Borrowing Configuration
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="BorrowTransaction"
+                                           asp-action="Manage">
+
+                                            Transactions
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Fine"
+                                           asp-action="Index">
+
+                                            Fines
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Feedback"
+                                           asp-action="Index">
+
+                                            Feedback
+
+                                        </a>
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <hr class="dropdown-divider" />
+
+                                    </li>
+
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Reports"
+                                           asp-action="Index">
+
+                                                          <i class="bi bi-bar-chart-line me-2"
+                                                              aria-hidden="true"></i>
+                                                          Reports
+
+                                        </a>
+
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        }
+
+                    </ul>
+
+
+                    <!-- RIGHT NAVIGATION -->
+
+                    <ul class="navbar-nav">
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item dropdown">
+
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown">
+
+                                                <i class="bi bi-person-circle me-1"
+                                                    aria-hidden="true"></i>
+                                    @User.Identity.Name
+
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+
+                                    <li>
+
+                                        <span class="dropdown-item-text">
+
+                                            Logged in as:
+
+                                            <strong>
+                                                @if (User.IsInRole("Librarian"))
+                                                {
+                                                    <span>Librarian</span>
+                                                }
+                                                else if (User.IsInRole("Member"))
+                                                {
+                                                    <span>Member</span>
+                                                }
+                                            </strong>
+
+                                        </span>
+
+                                    </li>
+
+                                    <li>
+                                        <hr class="dropdown-divider" />
+                                    </li>
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Account"
+                                           asp-action="ProfileSettings">
+
+                                            <i class="bi bi-gear me-2"
+                                               aria-hidden="true"></i>
+                                            Profile Settings
+
+                                        </a>
+
+                                    </li>
+
+                                    <li>
+
+                                        <div class="dropdown-item-text">
+                                            Appearance
+                                        </div>
+
+                                        <div class="dropdown-item theme-switch-item">
+
+                                            <label class="theme-switch" for="themeToggle">
+
+                                                <span id="themeStatus">
+                                                    Light Mode
+                                                </span>
+
+                                                <input id="themeToggle"
+                                                       class="form-check-input"
+                                                       type="checkbox"
+                                                       role="switch" />
+
+                                            </label>
+
+                                        </div>
+
+                                    </li>
+
+                                    <li>
+
+                                        <form asp-controller="Account"
+                                              asp-action="Logout"
+                                              method="post">
+
+                                            <button type="submit"
+                                                    class="dropdown-item logout-item">
+
+                                                                <i class="bi bi-box-arrow-right me-2"
+                                                                    aria-hidden="true"></i>
+                                                                Logout
+
+                                            </button>
+
+                                        </form>
+
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Account"
+                                   asp-action="Login">
+
+                                    Login
+
+                                </a>
+
+                            </li>
+
+
+                            <li class="nav-item dropdown">
+
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown">
+
+                                    Register
+
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+
+                                    <li>
+
+                                        <a class="dropdown-item"
+                                           asp-controller="Account"
+                                           asp-action="RegisterMember">
+
+                                            Register as Member
+
+                                        </a>
+
+                                    </li>
+
+                                    @if (!await DbContext.Librarians.AnyAsync() ||
+                                         User.IsInRole("Librarian"))
+                                    {
+                                        <li>
+
+                                            <a class="dropdown-item"
+                                               asp-controller="Account"
+                                               asp-action="RegisterLibrarian">
+
+                                                Register as Librarian
+
+                                            </a>
+
+                                        </li>
+                                    }
+
+                                </ul>
+
+                            </li>
+                        }
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="site-main">
+
+        @RenderBody()
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer class="border-top footer site-footer">
+
+        <div class="container text-center py-3">
+
+            <span>
+                © @DateTime.Now.Year
+                City Knowledge Library
+            </span>
+
+            <span class="mx-2">
+                |
+            </span>
+
+            <span>
+                ASP.NET Core MVC
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <!-- SCRIPTS -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cookieName = 'library_theme';
+            const themeToggle = document.getElementById('themeToggle');
+            const themeStatus = document.getElementById('themeStatus');
+
+            const applyTheme = (theme) => {
+                const isDark = theme === 'dark';
+
+                document.body.classList.toggle('theme-dark', isDark);
+
+                if (themeToggle) {
+                    themeToggle.checked = isDark;
+                }
+
+                if (themeStatus) {
+                    themeStatus.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+                }
+            };
+
+            const savedTheme = document.cookie
+                .split('; ')
+                .find(row => row.startsWith(cookieName + '='));
+
+            const initialTheme = savedTheme
+                ? decodeURIComponent(savedTheme.split('=')[1])
+                : 'light';
+
+            applyTheme(initialTheme);
+
+            if (themeToggle) {
+                themeToggle.addEventListener('change', function () {
+                    const nextTheme = this.checked ? 'dark' : 'light';
+
+                    document.cookie = `${cookieName}=${nextTheme}; path=/; max-age=31536000`;
+                    applyTheme(nextTheme);
+                });
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false)
+
+</body>
+
+</html>
