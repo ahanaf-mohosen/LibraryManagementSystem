@@ -2,8 +2,6 @@
 
 An ASP.NET Core MVC library management system with member and librarian workflows for books, borrowing, reservations, fines, feedback, profiles, and reports.
 
-**Repository:** [fahim-ahmed-sarker/LibraryManagementSystem](https://github.com/fahim-ahmed-sarker/LibraryManagementSystem)
-
 ## Preview
 
 ![Library logo](LibraryManagementSystem/wwwroot/images/logo/library-logo.png)
