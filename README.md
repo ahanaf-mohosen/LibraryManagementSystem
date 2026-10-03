@@ -4,13 +4,6 @@ An ASP.NET Core MVC library management system with member and librarian workflow
 
 **Repository:** [fahim-ahmed-sarker/LibraryManagementSystem](https://github.com/fahim-ahmed-sarker/LibraryManagementSystem)
 
-## Group Details
-
-| Student ID | Full Name | Responsibility |
-| --- | --- | --- |
-| **20029294** | **Fahim Ahmed Sarker** | **Librarian Module & Documentation:** Librarian registration and authentication, library profile management, book catalogue CRUD, book search and details, book cover upload, borrowing configuration, transaction management, fine management, feedback moderation, reports, librarian dashboard, system documentation and user manual. |
-| **20030827** | **Mohammad Mumtahin** | **Member Module & Unit Testing:** Member registration and authentication, book browsing and searching, book details and availability, borrowing, returning, reservation, loan renewal, borrowing history, fines, feedback and ratings, member dashboard, and unit testing of core borrowing and transaction functionality. |
-
 ## Preview
 
 ![Library logo](LibraryManagementSystem/wwwroot/images/logo/library-logo.png)
